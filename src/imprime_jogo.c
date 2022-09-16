@@ -1,33 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define I 3
+#define J 3
+
 // Função responsável por imprimir o jogo
-void imprime_jogo(int *pmat){
-    int a, b ,c = 1;
+void imprime_jogo(int *pmat)
+{
+    int tecla = 1;
 
-    // Mostra os numeros
-    for(a = 0; a < 9; a++)
-    {
-        printf("    %i", c);
-
-        if(a == 2 || a == 5) 
-            printf("\n\n");
-
-        c++;
+    // Mostra as opções de teclas para o jogador digitar
+    for (int i = 0; i < I; i++)
+    {        
+        for (int j = 0; j < J; j++)
+        {           
+            printf("    %i", tecla);
+            tecla++;
+        }        
+        printf("\n\n");
     }
 
     printf("\n    ___________\n\n\n");
 
-    // Mostra os símbolos
-    for(a = 0; a < 3; a++) 
-
-    for(b = 0; b < 3; b++) {
-        printf("    %c", *pmat);
-        
-        if(b == 2) 
-            printf("\n\n");
-
-        // Faz o ponteiro apontar para a próxima posição
-        *(pmat++);                
+    // Mostra os símbolos do jogo
+    for (int i = 0; i < I; i++)
+    {        
+        for (int j = 0; j < J; j++)
+        {           
+            printf("    %c", *pmat);
+            *(pmat++); 
+        }        
+        printf("\n\n");
     }
 }

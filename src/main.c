@@ -4,23 +4,24 @@
 #include "imprime_jogo.c"
 #include "analisa_tecla.c"
 
+#define I 3
+#define J 3
+
 main()
 {   
-    int a, b, c, d = 1, mat[3][3], *pmat = mat[0];
-    char elem[20];
+    // Inicializa variáveis
+    int num_iguais, ganhou, mat[I][J], *pmat = mat;
+    num_iguais = ganhou = 0;
+    char teclas[20];
 
-    // Atribui os valores a matriz
-    for(a = 0; a < 9; a++)
-    { 
-        // rand() % 2 gera números aleatórios até no máximo um valor menor que 2
-        *pmat = 1 + (rand() % 2);  
+    // Popula a matriz com 1's e 2's
+    for (int i = 0; i < I; i++)
+        for (int j = 0; j < J; j++)
+            // Pega o resto da divisão de um número inteiro aleatório por 2 e soma mais 1, resultando sempre em 1 ou 2
+            mat[i][j] = 1 + (rand() % 2);
 
-        // Ponteiro apontando para a próxima posição
-        *(pmat++);           
-    }
-
-    // Chamada da função que imprime o jogo
-    imprime_jogo(mat[0]);     
+    // Chama função que imprime o jogo
+    imprime_jogo(mat);     
 
     do
     {     
@@ -30,37 +31,37 @@ main()
         printf("\n\t  Digite o numero correspondente a posicao que desejas alterar\n");
         printf("\tVale lembrar que outras casas da vizinhanca tambem sao alteradas\n");
 
-        elem[0] = getche();
+        teclas[0] = getche();
 
-        // Limpando a tela
+        // Limpa a tela (terminal)
         system("cls");    
 
         // Chama a Função que altera os valores do jogo
-        analisa_tecla(mat[0], &elem[0]); 
+        analisa_tecla(mat[0], &teclas[0]); 
 
         // Chamada da função que imprime o jogo   
         imprime_jogo(mat[0]);                
 
         pmat = mat[0];
-        c = 0;
+        num_iguais = 0;
 
-        // ANALISA SE TODOS VALORES ESTAO IGUAIS. SE TIVER O JOGADOR VENCEU
-        for(a = 0; a < 9; a++) 
+        // Conta quantos números são iguais
+        for(int i = 0; i < 9; i++)         
+            if(pmat[0] == pmat[i])
+                num_iguais++;
         
-        if(pmat[0] == pmat[a])
-            c++;
-        
-        if(c == 9)
+        // Caso todos sejam iguais, o jogador venceu
+        if(num_iguais == 9)
         {
             printf("\n\nPARABENS - VOCE CONSEGUIU FAZER COM QUE TODOS SIMBOLOS FICASSEM IGUAIS - VENCEU\n\n");
-            d = 0;
+            ganhou = 1;
 
             // // Soa um beep com frequencia de 500 MHZ por 1 segundo, (1000 milissegundos)
             // beep(500, 1000); 
         }
         else 
             printf("\n\t\tTENTE NOVAMENTE - PERSISTENCIA ATE ALCANCAR EXITO\n");
-    } while(d); // Enquanto d for diferente de zero 0
+    } while(!ganhou); // Continua repetindo enquanto o jogador não ganha o jogo
 
     // Espera o usuário digitar qualquer tecla
     getch();       
