@@ -10,16 +10,18 @@
 main()
 {   
     // Inicializa variáveis
-    int num_iguais, ganhou, mat[I][J], *pmat = mat;
+    int num_iguais, ganhou, mat[I][J], *pmat = mat, i, j;
     num_iguais = ganhou = 0;
     char teclas[20];
 
     // Popula a matriz com 1's e 2's
-    for (int i = 0; i < I; i++)
-        for (int j = 0; j < J; j++)
-            // Pega o resto da divisão de um número inteiro aleatório por 2 e soma mais 1, resultando sempre em 1 ou 2
+    for (i = 0; i < I; i++){
+        for (j = 0; j < J; j++){
+            // Alimenta a matriz com numeros aleatórios, entre 1 e 2 
             mat[i][j] = 1 + (rand() % 2);
-
+            
+        }
+    }    
     // Chama função que imprime o jogo
     imprime_jogo(mat);     
 
