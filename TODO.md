@@ -1,7 +1,7 @@
 - Refatoração geral do código [Vinícius]
   
 - Criar seleção de dificuldade (fácil ou difícil)*
-- Criar mecanismo de tentativas (no fácil, basear-se no início e método mais fácil de resolver. No difícil, ser um pouco maior que o fácil)
+- Criar mecanismo de tentativas (no fácil, basear-se no início e método mais fácil de resolver. No difícil, ser um pouco maior que o fácil) - FEITO
 - Corrigir problema do rand não gerando números aleatórios
 
 FÁCIL
