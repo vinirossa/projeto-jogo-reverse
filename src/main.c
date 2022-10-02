@@ -10,7 +10,7 @@
 main()
 {
     // Inicializa variáveis
-    int matriz[3][3], *pmatriz = matriz, num_iguais, perdeu, ganhou, tentativa_atual, tentativa_facil, tentativa_dificil;
+    int matriz[3][3], *pmatriz = matriz, dificuldade, num_iguais, perdeu, ganhou, tentativa_atual, tentativa_facil, tentativa_dificil;
     num_iguais = perdeu = ganhou = tentativa_atual = 0;
     tentativa_facil = 10;
     tentativa_dificil = 25;
@@ -20,13 +20,33 @@ main()
     srand(time(0));
 
     // Popula a matriz com 2's e 3's
-    for (int i = 0; i < 3; i++)
-        for (int j = 0; j < 3; j++)
+    for (int i = 0; i < 3; i++){
+        for (int j = 0; j < 3; j++){
             // Pega o resto da divisão de um número inteiro aleatório por 2 e soma mais 2, resultando sempre em 2 ou 3
-            matriz[i][j] = 2 + (rand() % 2);
+            matriz[i][j] = 2 + (rand() % 2);}
+    }
+    
+    do{
+    printf("Selecione a dificuldade:\n");
+    printf("1.Facil\n2.Dificil\n");
+    scanf("%d", &dificuldade);
+    } while(dificuldade != 1 && dificuldade != 2);
 
-    // Exibe o jogo pela primeira vez
-    imprime_jogo(matriz);
+    if(dificuldade != 1 && dificuldade != 2){
+        printf("Esta opcao nao existe, por favor insira uma opcao valida.");
+    }
+
+    if (dificuldade == 1)
+    {
+        printf("Dificuldade selecionada:\n Facil.");
+        // Exibe o jogo pela primeira vez
+        imprime_jogo(matriz);
+    }
+
+    else if(dificuldade == 2){
+        printf("Dificuldade selecionada:\n Dificil.");
+        //Exibir a versao dificil do jogo
+    }
 
     do
     {
