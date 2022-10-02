@@ -6,68 +6,65 @@
 
 #define I 3
 #define J 3
-#define null 0
 
 main()
 {
     // Inicializa variáveis
-    int num_iguais, perdeu = 0, fim = 0, mat[3][3], *pmat = mat, i, j, tentativa_atual = 0;
-    int  tentativa_facil = 10;
-    num_iguais = 0;
-    char teclas[20];
+    int matriz[3][3], *pmatriz = matriz, num_iguais, perdeu, ganhou, tentativa_atual, tentativa_facil, tentativa_dificil;
+    num_iguais = perdeu = ganhou = tentativa_atual = 0;
+    tentativa_facil = 10;
+    tentativa_dificil = 25;
+    char tecla_pressionada;
 
-    srand(time(null));
+    // Corrige o comportamento da função rand() para ela de fato gerar números aleatório
+    srand(time(0));
 
-    // Popula a matriz com 1's e 2's
-    for (i = 0; i < 3; i++)
-    {
-        for (j = 0; j < 3; j++)
-        {
-            // Alimenta a matriz com numeros aleatórios, entre 1 e 2
-            mat[i][j] = (rand() % 2)+1;
-        }
-    }
-    // Chama função que imprime o jogo
-    printf("\n\n");
-    imprime_jogo(mat);
+    // Popula a matriz com 2's e 3's
+    for (int i = 0; i < 3; i++)
+        for (int j = 0; j < 3; j++)
+            // Pega o resto da divisão de um número inteiro aleatório por 2 e soma mais 2, resultando sempre em 2 ou 3
+            matriz[i][j] = 2 + (rand() % 2);
+
+    // Exibe o jogo pela primeira vez
+    imprime_jogo(matriz);
 
     do
     {
-        pmat = mat[0];
+        printf("\n TENTATIVAS RESTANTES: %d", tentativa_facil - tentativa_atual);
+        printf("\n OBJETIVO: Deixar todas as casas com o mesmo simbolo");
+        printf("\n COMO JOGAR: Digite o número correspondente a posicao que deseja alterar\n");
+        printf(" e tanto essa posicao como as aos arredores serao invertidas (exceto as diagonais)\n");
 
-        printf("\n\t\tTENTATIVAS DISPONIVEIS: %d\n", (tentativa_facil-tentativa_atual));
+        // Detecta a tecla pressionada pelo jogador
+        tecla_pressionada = getche();
 
-        printf("\n\n\t\tVoce deve Deixar todos as casas com o mesmo simbolo dentro da quantidade de tentativas disponiveis");
-        printf("\n\t  Digite o numero correspondente a posicao que desejas alterar\n");
-        printf("\tVale lembrar que outras casas da vizinhanca tambem sao alteradas\n");
-
-        teclas[0] = getche();
+        // Checar se essa tecla é uma opção válida
 
         // Limpa a tela (terminal)
         system("cls");
 
-        // Chama a Função que altera os valores do jogo
-        analisa_tecla(mat[0], &teclas[0]);
+        // Chama a função que altera os valores do jogo
+        analisa_tecla(matriz[0], &tecla_pressionada);
 
         // Chamada da função que imprime o jogo
-        imprime_jogo(mat[0]);
+        imprime_jogo(matriz[0]);
 
-        pmat = mat[0];
+        pmatriz = matriz[0];
         num_iguais = 0;
 
         // Conta quantos números são iguais
         for (int i = 0; i < 9; i++)
-            if (pmat[0] == pmat[i])
+            if (pmatriz[0] == pmatriz[i])
                 num_iguais++;
         
         //adiciona ao total de tentativas ja feitas
         tentativa_atual ++;
 
         // Caso todos sejam iguais, o jogador venceu
-        if (num_iguais == 9)
+        if (num_iguais == I * J)
         {
-            printf("\n\nPARABENS - VOCE CONSEGUIU FAZER COM QUE TODOS SIMBOLOS FICASSEM IGUAIS - VENCEU\n\n");
-            fim = 1;
+            printf("\n\nVITORIA - Parabens, voce conseguiu deixar todos os simbolos iguais!!!\n\n");
+            ganhou = 1;
 
             // // Soa um beep com frequencia de 500 MHZ por 1 segundo, (1000 milissegundos)
             // beep(500, 1000);
@@ -75,20 +72,16 @@ main()
         else if (tentativa_atual <= tentativa_facil)
         { 
             if(tentativa_atual == tentativa_facil)
-            {
                 printf("\t\tAcabou suas tentativas...\n");
-            }
             else 
-            {
-                printf("\n\t\tTENTE NOVAMENTE - PERSISTENCIA ATE ALCANCAR EXITO\n");
-            }
+            printf("\n\t\tTENTE NOVAMENTE - Com persistencia voce ira conseguir\n");
         }
-        if((tentativa_atual >= tentativa_facil) && fim == 0 )
+        if((tentativa_atual >= tentativa_facil) && ganhou == 0 )
         {
-            printf("\n\t\tNao foi dessa vez, caso queira, é possivel rodar o jogo de novo.\n");
-            fim = 1;
+            printf("\n\t\tDERROTA - Nao foi dessa vez, reabra o jogo para tentar de novo!\n");
+            ganhou = 1;
         }
-    } while (!fim); // Continua repetindo enquanto o jogo nao chega ao fim (por vitoria ou derrota)
+    } while (!ganhou); // Continua repetindo enquanto o jogo nao chega ao fim (por vitoria ou derrota)
 
     // Espera o usuário digitar qualquer tecla
     getch();
