@@ -1,93 +1,88 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Função que alterna os valores dos quadrados
-void analisa_tecla(int *pmat, char *elem)
+void executa_acao(int *pmatriz, int i_tecla, int j_tecla, int i_mat, int j_mat);
+void inverte_casa(int *casa);
+
+// Função que analisa a tecla pressionada e alterna os valores dos quadrados
+void analisa_tecla(int *pmatriz, char *pvetor_teclas, int i_mat, int j_mat)
 {
-    switch(*elem) {
-        case '1': 
-            if(pmat[0] == 1) pmat[0] = 2;
-            else pmat[0] = 1;
-            if(pmat[1] == 1) pmat[1] = 2;
-            else pmat[1] = 1;
-            if(pmat[3] == 1) pmat[3] = 2;
-            else pmat[3] = 1;
-            break;
+    int tecla_valida, erro_avisado, idx_tecla_pressionada;
+    tecla_valida = erro_avisado = idx_tecla_pressionada = 0;
+    char tecla_pressionada;
 
-        case '2': 
-            if(pmat[1] == 1) pmat[1] = 2;
-            else pmat[1] = 1;
-            if(pmat[0] == 1) pmat[0] = 2;
-            else pmat[0] = 1;
-            if(pmat[2] == 1) pmat[2] = 2;
-            else pmat[2] = 1;
-            break;
+    while (tecla_valida == 0)
+    {    
+        // Detecta tecla digitada (diferente do scanf, não quebra o programa quando é digitada uma letra)
+        tecla_pressionada = getch();
 
-        case '3': 
-            if(pmat[2] == 1) pmat[2] = 2;
-            else pmat[2] = 1;
-            if(pmat[1] == 1) pmat[1] = 2;
-            else pmat[1] = 1;
-            if(pmat[5] == 1) pmat[5] = 2;
-            else pmat[5] = 1;
-            break;
+        // Checa se a tecla digitada é válida e pega o índice dela no vetor através de ponteiros
+        for (int i = 0; i < i_mat * j_mat; i++)
+            if (tecla_pressionada == *(pvetor_teclas + i)) {
+                tecla_valida = 1;
+                idx_tecla_pressionada = (pvetor_teclas + i) - pvetor_teclas;
+            }
 
-        case '4': 
-            if(pmat[3] == 1) pmat[3] = 2;
-            else pmat[3] = 1;
-            if(pmat[0] == 1) pmat[0] = 2;
-            else pmat[0] = 1;
-            if(pmat[6] == 1) pmat[6] = 2;
-            else pmat[6] = 1;
-            break;
+        // Só exibe aviso que a tecla é inválida uma vez
+        if (tecla_valida == 0 && erro_avisado == 0) {
+            printf("\n===> A T E N C A O : Digite uma das teclas validas para jogar! (As letras precisam ser maiusculas)");
+            erro_avisado = 1;
+        }
+    } 
+    
+    // Encontra i e j na matriz de casas a partir do índice do array
+    int linha, coluna, i_tecla, j_tecla;
+    linha = coluna = i_tecla = j_tecla = 0;
 
-        case '5': 
-            if(pmat[4] == 1) pmat[4] = 2;
-            else pmat[4] = 1;
-            if(pmat[1] == 1) pmat[1] = 2;
-            else pmat[1] = 1;
-            if(pmat[3] == 1) pmat[3] = 2;
-            else pmat[3] = 1;
-            if(pmat[5] == 1) pmat[5] = 2;
-            else pmat[5] = 1;
-            if(pmat[7] == 1) pmat[7] = 2;
-            else pmat[7] = 1;                
-            break;
+    for (int i = 0; i < i_mat * j_mat; i++)
+    {
+        if (coluna == i_mat) {
+            coluna = 0;
+            linha++;
+        }
 
-        case '6': 
-            if(pmat[5] == 1) pmat[5] = 2;
-            else pmat[5] = 1;
-            if(pmat[2] == 1) pmat[2] = 2;
-            else pmat[2] = 1;
-            if(pmat[8] == 1) pmat[8] = 2;
-            else pmat[8] = 1;
-            break;
+        if (i == idx_tecla_pressionada) {
+            i_tecla = linha;
+            j_tecla = coluna;
+        }
 
-        case '7': 
-            if(pmat[6] == 1) pmat[6] = 2;
-            else pmat[6] = 1;
-            if(pmat[3] == 1) pmat[3] = 2;
-            else pmat[3] = 1;
-            if(pmat[7] == 1) pmat[7] = 2;
-            else pmat[7] = 1;
-            break;
-
-        case '8': 
-            if(pmat[7] == 1) pmat[7] = 2;
-            else pmat[7] = 1;
-            if(pmat[6] == 1) pmat[6] = 2;
-            else pmat[6] = 1;
-            if(pmat[8] == 1) pmat[8] = 2;
-            else pmat[8] = 1;
-            break;
-
-        case '9': 
-            if(pmat[8] == 1) pmat[8] = 2;
-            else pmat[8] = 1;
-            if(pmat[5] == 1) pmat[5] = 2;
-            else pmat[5] = 1;
-            if(pmat[7] == 1) pmat[7] = 2;
-            else pmat[7] = 1;
-            break;            
+        coluna++;
     }
+
+    // Executa ações pelo pressionamento da tecla (inverte casa atual e sua vizinhança adjacente)
+    executa_acao(pmatriz, i_tecla, j_tecla, i_mat, j_mat);
+}
+
+// Função responsável por executar a ação de pressionar uma tecla (inverter casa atual e adjacentes)
+void executa_acao(int *pmatriz, int i_tecla, int j_tecla, int i_mat, int j_mat)
+{
+    // Inverte casa principal (p + (i * it) + j)
+    inverte_casa(pmatriz + (i_tecla * i_mat) + j_tecla);
+
+    // Inverte casas verticais vizinhas (quanto existem)
+    // *Cima (i - 1, j)
+    if (i_tecla - 1 >= 0)
+        inverte_casa(pmatriz + ((i_tecla - 1) * i_mat) + j_tecla);
+
+    // *Baixo (i + 1, j)
+    if (i_tecla + 1 < i_mat)
+        inverte_casa(pmatriz + ((i_tecla + 1) * i_mat) + j_tecla);
+
+    // Inverte casas horizontais vizinhas (quanto existem)
+    // *Esquerda (i, j - 1)
+    if (j_tecla - 1 >= 0)
+        inverte_casa(pmatriz + (i_tecla * i_mat) + j_tecla - 1);
+
+    // *Direita (i, j + 1)
+    if (j_tecla + 1 < j_mat)
+        inverte_casa(pmatriz + (i_tecla * i_mat) + j_tecla + 1);
+}
+
+// Função responsável por inverter o valor da casa (símbolo) - quando 2 vira 3, quando 3 vira 2
+void inverte_casa(int *casa)
+{
+    if (*casa == 2)
+        *casa = 3;
+    else
+        *casa = 2;
 }
